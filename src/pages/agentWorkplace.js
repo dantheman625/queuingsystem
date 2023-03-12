@@ -4,7 +4,6 @@ import { io } from "socket.io-client";
 let socket;
 
 export default function Home() {
-  const [hasCase, setHasCase] = useState(false);
   const [currentCase, setCurrentCase] = useState(null);
 
   useEffect(() => {
@@ -31,16 +30,33 @@ export default function Home() {
 
   const assignCase = () => {
     console.log("send for case");
-    setHasCase(true);
     socket.emit("requestCase", "");
+  };
+
+  const signOff = () => {
+    if (
+      currentCase.requiredSignatures === 2 &&
+      currentCase.givenSignatures === 0
+    ) {
+      currentCase.givenSignatures += 1;
+      socket.emit("enqueu", JSON.stringify(currentCase));
+      setCurrentCase(null);
+    } else {
+      setCurrentCase(null);
+    }
   };
   return (
     <>
       <h1>Work on those cases!</h1>
-      <button disabled={hasCase} onClick={assignCase}>
+      <button disabled={currentCase !== null} onClick={assignCase}>
         Assign Case
       </button>
-      {currentCase ? <label>{currentCase.title}</label> : null}
+      {currentCase ? (
+        <div className="flex">
+          <label>{currentCase.title}</label>
+          <button onClick={signOff}>Sign Case</button>
+        </div>
+      ) : null}
     </>
   );
 }

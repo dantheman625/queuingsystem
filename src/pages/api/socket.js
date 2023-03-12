@@ -4,6 +4,7 @@ import {
   dequeuLowValue,
   getLowValueQueu,
   getQueusSizes,
+  dequeu,
 } from "@/queu/queuingHandler";
 
 const SocketHandler = (req, res) => {
@@ -35,7 +36,7 @@ const SocketHandler = (req, res) => {
 
       //case assignment to client
       socket.on("requestCase", (msg) => {
-        const item = dequeuLowValue();
+        const item = dequeu();
         if (item === null) {
           socket.emit("noCaseToAssign", JSON.stringify(item));
         } else {
@@ -43,8 +44,8 @@ const SocketHandler = (req, res) => {
           socket.emit("getCase", JSON.stringify(item));
           //broadcast the change of the queu to all
           socket.broadcast.emit(
-            "getLowValueQue",
-            JSON.stringify(getLowValueQueu())
+            "successfulEnque",
+            JSON.stringify(getQueusSizes())
           );
         }
       });

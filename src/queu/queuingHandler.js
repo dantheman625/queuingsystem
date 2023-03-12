@@ -34,12 +34,12 @@ export function enqueu(newItem) {
   }
 }
 
-export function dequeuLowValue() {
-  if (lowValueQueu.length === 0) return null;
+export function dequeu() {
+  if (highValueQueu.length > 0) return highValueQueu.shift();
 
-  return lowValueQueu.shift();
-}
+  if (midValueQueu.length > 0) return midValueQueu.shift();
 
-export function getLowValueQueu() {
-  return lowValueQueu;
+  if (lowValueQueu.length > 0) return lowValueQueu.shift();
+
+  return null;
 }
