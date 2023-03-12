@@ -1,26 +1,45 @@
 const lowValueQueu = [];
+const midValueQueu = [];
+const highValueQueu = [];
 
-function enqueuLowValue(newItem) {
+export function getQueusSizes() {
+  return {
+    low: lowValueQueu.length,
+    mid: midValueQueu.length,
+    high: highValueQueu.length,
+  };
+}
+
+export function enqueu(newItem) {
   console.log("enquue entered");
   try {
     if (!newItem) throw new Error("new item undefined");
+    const parsedItem = JSON.parse(newItem);
 
-    lowValueQueu.push(JSON.parse(newItem));
-
-    return lowValueQueu;
+    switch (parsedItem.requiredSignatures) {
+      case 0:
+        lowValueQueu.push(parsedItem);
+        break;
+      case 1:
+        midValueQueu.push(parsedItem);
+        break;
+      case 2:
+        highValueQueu.push(parsedItem);
+        break;
+      default:
+        throw new Error("Could not assign item by type");
+    }
   } catch (e) {
     console.log(e.message);
   }
 }
 
-function dequeuLowValue() {
+export function dequeuLowValue() {
   if (lowValueQueu.length === 0) return null;
 
   return lowValueQueu.shift();
 }
 
-function getLowValueQueu() {
+export function getLowValueQueu() {
   return lowValueQueu;
 }
-
-export { enqueuLowValue, dequeuLowValue, getLowValueQueu };

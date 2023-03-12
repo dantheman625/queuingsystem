@@ -1,8 +1,9 @@
 import { Server } from "socket.io";
 import {
-  enqueuLowValue,
+  enqueu,
   dequeuLowValue,
   getLowValueQueu,
+  getQueusSizes,
 } from "@/queu/queuingHandler";
 
 const SocketHandler = (req, res) => {
@@ -14,21 +15,18 @@ const SocketHandler = (req, res) => {
     res.socket.server.io = io;
 
     io.on("connection", (socket) => {
-      //low value queu oprations
-
-      //get the current low value queu
-      socket.on("requestLowValueQue", (msg) => {
-        const lowValueQueu = getLowValueQueu();
-        socket.broadcast.emit("getLowValueQue", JSON.stringify(lowValueQueu));
+      //get the sizes of the queus
+      socket.on("requestQueuSizes", (msg) => {
+        socket.emit("getQueusSizes", JSON.stringify(getQueusSizes()));
       });
 
-      //add an item to the low value queu
+      //add item to the queu
       socket.on("enqueu", (msg) => {
         try {
-          const queu = enqueuLowValue(msg);
+          enqueu(msg);
           socket.broadcast.emit(
-            "successfulLowValueEnque",
-            JSON.stringify(queu)
+            "successfulEnque",
+            JSON.stringify(getQueusSizes())
           );
         } catch (e) {
           socket.broadcast.emit("failed-enque", "fail");
