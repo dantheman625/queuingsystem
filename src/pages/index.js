@@ -25,26 +25,22 @@ export default function Home() {
 
     socket.on("connect", () => {
       console.log("connected");
-      socket.emit("getQueu", "");
+      //after connection get the current low value queu
+      socket.emit("requestLowValueQue", "");
     });
-    socket.on("get-queu", (msg) => {
+
+    socket.on("getLowValueQue", (msg) => {
       try {
-        const newQueu = JSON.parse(msg);
-        setQueu(newQueu);
+        const newLowValueQueu = JSON.parse(msg);
+        setQueu(newLowValueQueu);
       } catch (e) {
-        console.log("failed to convert json to array");
+        console.log("Error when receiving current low value queu");
       }
     });
-    socket.on("successful-enque", (msg) => {
-      console.log(msg);
-      const newQueu = JSON.parse(msg);
-      console.log(typeof newQueu);
-      setQueu(newQueu);
-      console.log(queu);
-    });
-    socket.on("update-input", (msg) => {
-      console.log("receiving: " + msg);
-      setInput(msg);
+
+    socket.on("successfulLowValueEnque", (msg) => {
+      const newLowValueQueu = JSON.parse(msg);
+      setQueu(newLowValueQueu);
     });
   };
 

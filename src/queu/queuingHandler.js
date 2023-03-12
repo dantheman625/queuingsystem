@@ -1,6 +1,6 @@
 const lowValueQueu = [];
 
-function enqueu(newItem) {
+function enqueuLowValue(newItem) {
   console.log("enquue entered");
   try {
     if (!newItem) throw new Error("new item undefined");
@@ -13,14 +13,14 @@ function enqueu(newItem) {
   }
 }
 
-function dequeu() {
-  if ((lowValueQueu.length = 0)) return null;
+function dequeuLowValue() {
+  if (lowValueQueu.length === 0) return null;
 
   return lowValueQueu.shift();
 }
 
-function getQueu() {
+function getLowValueQueu() {
   return lowValueQueu;
 }
 
-export { enqueu, dequeu, getQueu };
+export { enqueuLowValue, dequeuLowValue, getLowValueQueu };
