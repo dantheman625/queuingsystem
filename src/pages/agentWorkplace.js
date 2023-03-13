@@ -29,6 +29,7 @@ export default function Home() {
     socket.on("getCase", (msg) => {
       try {
         const receivedCase = JSON.parse(msg);
+        console.log(receivedCase);
         setCurrentCase(receivedCase);
       } catch (e) {
         console.log("Error when parsing received case");
@@ -37,16 +38,16 @@ export default function Home() {
   };
 
   const assignCase = () => {
-    console.log("send for case");
-    socket.emit("requestCase", "");
+    socket.emit("requestCase", agentId);
   };
 
   const signOff = () => {
     if (
       currentCase.requiredSignatures === 2 &&
-      currentCase.givenSignatures === 0
+      (currentCase.givenSignatures.lenght === 0 ||
+        currentCase.givenSignatures.lenght === undefined)
     ) {
-      currentCase.givenSignatures += 1;
+      currentCase.givenSignatures.push(agentId);
       socket.emit("enqueu", JSON.stringify(currentCase));
       setCurrentCase(null);
     } else {
@@ -64,14 +65,19 @@ export default function Home() {
         Work on those cases!
       </Heading>
       <div className="h-4"></div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input
-          className="placeholder:text-center"
-          placeholder="Enter Agent ID"
-          {...register("agentId", { required: true })}
-        ></input>
-        <input type="submit" value="Submit" />
-      </form>
+      {agentId ? (
+        <p>Logged in with Id {agentId}</p>
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <input
+            className="placeholder:text-center"
+            placeholder="Enter Agent ID"
+            {...register("agentId", { required: true })}
+          ></input>
+          <input type="submit" value="Submit" />
+        </form>
+      )}
+
       <div className="h-4"></div>
       <button disabled={checkButton()} onClick={assignCase}>
         Assign Case

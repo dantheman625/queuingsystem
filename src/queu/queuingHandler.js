@@ -34,8 +34,17 @@ export function enqueu(newItem) {
   }
 }
 
-export function dequeu() {
-  if (highValueQueu.length > 0) return highValueQueu.shift();
+export function dequeu(agentId) {
+  if (highValueQueu.length > 0) {
+    const item = highValueQueu.findIndex(
+      (e) => !e.givenSignatures.includes(agentId)
+    );
+    console.log(item);
+    if (item >= 0) {
+      const i = highValueQueu.splice(item, 1);
+      return i[0];
+    }
+  }
 
   if (midValueQueu.length > 0) return midValueQueu.shift();
 

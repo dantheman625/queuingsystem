@@ -36,7 +36,7 @@ const SocketHandler = (req, res) => {
 
       //case assignment to client
       socket.on("requestCase", (msg) => {
-        const item = dequeu();
+        const item = dequeu(msg);
         if (item === null) {
           socket.emit("noCaseToAssign", JSON.stringify(item));
         } else {

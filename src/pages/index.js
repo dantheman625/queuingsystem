@@ -17,7 +17,7 @@ export default function Home() {
     const input = {
       title: data.title,
       requiredSignatures: signatures,
-      givenSignatures: 0,
+      givenSignatures: [],
     };
     const jsonInput = JSON.stringify(input);
     socket.emit("enqueu", jsonInput);
