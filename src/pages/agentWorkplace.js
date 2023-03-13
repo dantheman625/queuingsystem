@@ -1,10 +1,18 @@
+import Heading from "@/components/Heading";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { io } from "socket.io-client";
 
 let socket;
 
 export default function Home() {
   const [currentCase, setCurrentCase] = useState(null);
+  const [agentId, setAgentId] = useState(null);
+
+  const { register, handleSubmit } = useForm();
+  const onSubmit = (data) => {
+    setAgentId(data.agentId);
+  };
 
   useEffect(() => {
     socketInitializer();
@@ -45,18 +53,43 @@ export default function Home() {
       setCurrentCase(null);
     }
   };
+
+  const checkButton = () => {
+    if (currentCase === null && agentId !== null) return false;
+    return true;
+  };
   return (
-    <>
-      <h1>Work on those cases!</h1>
-      <button disabled={currentCase !== null} onClick={assignCase}>
+    <div className="container flex flex-col items-center m-10">
+      <Heading level="h2" allignment="center">
+        Work on those cases!
+      </Heading>
+      <div className="h-4"></div>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <input
+          className="placeholder:text-center"
+          placeholder="Enter Agent ID"
+          {...register("agentId", { required: true })}
+        ></input>
+        <input type="submit" value="Submit" />
+      </form>
+      <div className="h-4"></div>
+      <button disabled={checkButton()} onClick={assignCase}>
         Assign Case
       </button>
+      <div className="h-4"></div>
       {currentCase ? (
-        <div className="flex">
-          <label>{currentCase.title}</label>
+        <div className="flex flex-col items-center">
+          <Heading level="h3" allignment="center">
+            Current Case
+          </Heading>
+          <div className="h-2"></div>
+          <div className="flex space-x-4">
+            <p>Title: </p>
+            <label>{currentCase.title}</label>
+          </div>
           <button onClick={signOff}>Sign Case</button>
         </div>
       ) : null}
-    </>
+    </div>
   );
 }

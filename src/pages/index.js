@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useForm } from "react-hook-form";
+import Heading from "@/components/Heading";
 let socket;
 
 export default function Home() {
@@ -60,39 +61,55 @@ export default function Home() {
   };
 
   return (
-    <div className="">
-      <h1>Curreent Queus</h1>
-      <div className="flex flex-row">
-        <div className="basis-1/3">
-          <h3>Low Value Queu</h3>
-          <p>{lowValueQueu}</p>
+    <div className="grid justify-center pt-10">
+      <Heading level="h2" allignment="center">
+        Queus Overview
+      </Heading>
+      <div className="h-8"></div>
+      <div className="flex flex-row space-x-10">
+        <div className="basis-1/3 break-inside-avoid-column">
+          <Heading level="h3" allignment="center">
+            Low Value
+          </Heading>
+          <p className="text-center">{lowValueQueu}</p>
         </div>
         <div className="basis-1/3">
-          <h3>Mid Value Queu</h3>
-          <p>{midValueQueu}</p>
+          <Heading level="h3" allignment="center">
+            Mid Value
+          </Heading>
+          <p className="text-center">{midValueQueu}</p>
         </div>
         <div className="basis-1/3">
-          <h3>highValueQueu Value Queu</h3>
-          <p>{highValueQueu}</p>
+          <Heading level="h3" allignment="center">
+            High Value
+          </Heading>
+          <p className="text-center">{highValueQueu}</p>
         </div>
       </div>
-      <h1>Create new Item for the queu</h1>
+      <div className="h-8"></div>
+      <Heading level="h2" allignment="center">
+        Create new Item
+      </Heading>
+      <div className="h-8"></div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-row">
-          <div className="radio">
-            <label>Type: </label>
-            <select id="types" {...register("type", { required: true })}>
-              <option value="low">Low</option>
-              <option value="mid">Mid</option>
-              <option value="high">High</option>
-            </select>
-          </div>
+        <div className="grid grid-cols-3 gap-4">
+          <label className="justify-self-center">Type</label>
+          <select
+            id="types"
+            className="col-span-2"
+            {...register("type", { required: true })}
+          >
+            <option value="low">Low</option>
+            <option value="mid">Mid</option>
+            <option value="high">High</option>
+          </select>
+          <label className="justify-self-center">Title</label>
+          <input
+            className="col-span-2"
+            {...register("title", { required: true })}
+          />
+          <input type="submit" className="col-span-3" value="Submit" />
         </div>
-        <div className="flex flex-row">
-          <label>Title</label>
-          <input {...register("title", { required: true })} />
-        </div>
-        <input type="submit" />
       </form>
     </div>
   );
