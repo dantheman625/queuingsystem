@@ -30,7 +30,7 @@ export default function Home() {
       try {
         const receivedCase = JSON.parse(msg);
         console.log(receivedCase);
-        setCurrentCase(receivedCase);
+        setCurrentCase(receivedCase[0]);
       } catch (e) {
         console.log("Error when parsing received case");
       }
@@ -55,6 +55,14 @@ export default function Home() {
     }
   };
 
+  const requestSecondReview = () => {
+    currentCase.requiredSignatures += 1;
+    console.log(currentCase.requiredSignatures);
+    currentCase.givenSignatures.push(agentId);
+    socket.emit("enqueu", JSON.stringify(currentCase));
+    setCurrentCase(null);
+  };
+
   const checkButton = () => {
     if (currentCase === null && agentId !== null) return false;
     return true;
@@ -74,12 +82,20 @@ export default function Home() {
             placeholder="Enter Agent ID"
             {...register("agentId", { required: true })}
           ></input>
-          <input type="submit" value="Submit" />
+          <input
+            type="submit"
+            value="Submit"
+            className="px-4 border-solid border-2 border-black rounded-md"
+          />
         </form>
       )}
 
       <div className="h-4"></div>
-      <button disabled={checkButton()} onClick={assignCase}>
+      <button
+        disabled={checkButton()}
+        onClick={assignCase}
+        className="px-4 border-solid border-2 border-black rounded-md"
+      >
         Assign Case
       </button>
       <div className="h-4"></div>
@@ -93,7 +109,24 @@ export default function Home() {
             <p>Title: </p>
             <label>{currentCase.title}</label>
           </div>
-          <button onClick={signOff}>Sign Case</button>
+          <div className="h-2"></div>
+          <div>
+            <button
+              onClick={signOff}
+              className="px-4 border-solid border-2 border-black rounded-md"
+            >
+              Sign Case
+            </button>
+            {currentCase.type === "mid" &&
+            currentCase.requiredSignatures === 1 ? (
+              <button
+                onClick={requestSecondReview}
+                className="px-4 border-solid border-2 border-black rounded-md"
+              >
+                Request Review
+              </button>
+            ) : null}
+          </div>
         </div>
       ) : null}
     </div>
