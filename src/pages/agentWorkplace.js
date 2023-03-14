@@ -44,8 +44,8 @@ export default function Home() {
   const signOff = () => {
     if (
       currentCase.requiredSignatures === 2 &&
-      (currentCase.givenSignatures.lenght === 0 ||
-        currentCase.givenSignatures.lenght === undefined)
+      (currentCase.givenSignatures.length === 0 ||
+        currentCase.givenSignatures.length === undefined)
     ) {
       currentCase.givenSignatures.push(agentId);
       socket.emit("enqueu", JSON.stringify(currentCase));

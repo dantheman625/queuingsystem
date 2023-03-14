@@ -2,6 +2,8 @@ const lowValueQueu = [];
 const midValueQueu = [];
 const highValueQueu = [];
 
+let prioritizeMid = false;
+
 export function getQueusSizes() {
   return {
     low: lowValueQueu.length,
@@ -35,6 +37,16 @@ export function enqueu(newItem) {
 }
 
 export function dequeu(agentId) {
+  if (highValueQueu.length === 0 && midValueQueu.length === 0) return null;
+
+  if (midValueQueu.length > 2 * highValueQueu.length) prioritizeMid = true;
+
+  if (prioritizeMid) return prioritizedDeque(agentId);
+
+  return normalDeque(agentId);
+}
+
+function normalDeque(agentId) {
   if (highValueQueu.length > 0) {
     const item = highValueQueu.findIndex(
       (e) => !e.givenSignatures.includes(agentId)
@@ -46,9 +58,11 @@ export function dequeu(agentId) {
     }
   }
 
-  if (midValueQueu.length > 0) return midValueQueu.shift();
+  return midValueQueu.shift();
+}
 
-  if (lowValueQueu.length > 0) return lowValueQueu.shift();
-
-  return null;
+function prioritizedDeque(agentId) {
+  const item = midValueQueu.shift();
+  if (midValueQueu.length <= highValueQueu.length) prioritizeMid = false;
+  return item;
 }
